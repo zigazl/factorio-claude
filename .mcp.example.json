@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "factorio": {
+      "command": "server/.venv/bin/python",
+      "args": [
+        "server/factorio_mcp.py"
+      ],
+      "env": {
+        "FACTORIO_RCON_HOST": "127.0.0.1",
+        "FACTORIO_RCON_PORT": "27015",
+        "FACTORIO_RCON_PASSWORD": "CHANGE_ME"
+      }
+    }
+  }
+}

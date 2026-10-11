@@ -1,0 +1,6 @@
+server/.venv/
+__pycache__/
+.server/
+.mcp.json
+.claude/settings.local.json
+.DS_Store
