@@ -40,4 +40,4 @@ fi
 echo "Strežnik teče. V igri: Multiplayer > Connect to address > 127.0.0.1:34198   (Ctrl+C ustavi in shrani)"
 exec "$FACTORIO" -c "$SRV/config/config.ini" --start-server "$SAVE" \
   --server-settings "$SRV/server-settings.json" --port 34198 \
-  --rcon-port 27015 --rcon-password "$PW"
+  --rcon-bind 127.0.0.1:27015 --rcon-password "$PW"

@@ -2,7 +2,7 @@
 
 Igraj Factorio s prompti. Claudu napišeš npr. *"nakoplji 20 železa in postavi peč"*. Claude to izvede **s tvojim likom po pravilih igre**: hodi s pathfindingom, rudari s hitrostjo roke, gradi samo iz inventarja in znotraj dosega.
 
-Preizkušeno s Factorio 2.0.77 (Steam, macOS) in Python MCP SDK 2.3.
+Preizkušeno s Factorio 2.0.77 in 2.1.24 (Steam, macOS) in Python MCP SDK 2.3. Mod v `info.json` zahteva `factorio_version` 2.1; za starejšo različico ga popravi.
 
 ## Arhitektura
 
@@ -142,9 +142,14 @@ RCON deluje samo v strežniškem načinu, zato igraš na lokalnem strežniku.
 
 1. V terminalu zaženi `./start-server.sh` (nov zemljevid) ali `./start-server.sh "ime savea"` (kopija tvojega savea).
    Terminal pusti odprt. Ctrl+C ustavi strežnik in shrani igro v `.server/saves/claude.zip`.
-2. Zaženi Factorio iz Steama in izberi **Multiplayer → Connect to address → `127.0.0.1:34198`**.
-3. Odpri Claude Code v tej mapi in odobri MCP strežnik `factorio`.
-4. Piši npr. *"poglej okolico in nakoplji 20 železa"* ali *"postavi kurilni rudnik na premog in ga napolni"*.
+   **Pozor:** `claude.zip` se zapiše samo ob čistem izhodu. Med igro napredek hranijo samodejni shranjeni stanji `.server/saves/_autosave1-5.zip` (vsakih 5 minut). Po sesutju ali prisilnem ustavitvi zadnji `_autosave` skopiraj čez `claude.zip`.
+2. Odjemalec mora imeti isti mod, sicer povezava ne uspe (*ModsMismatch*). Enkrat naredi simbolno povezavo:
+   ```bash
+   ln -sfn "$PWD/mod/claude-bridge" "$HOME/Library/Application Support/factorio/mods/claude-bridge"
+   ```
+3. Zaženi Factorio iz Steama in izberi **Multiplayer → Connect to address → `127.0.0.1:34198`**.
+4. Odpri Claude Code v tej mapi in odobri MCP strežnik `factorio`.
+5. Piši npr. *"poglej okolico in nakoplji 20 železa"* ali *"postavi kurilni rudnik na premog in ga napolni"*.
 
 Hiter test v igri (konzola, tipka `~`): `/cb_state`. RCON lahko preveriš z ukazom `nc -z 127.0.0.1 27015 && echo "RCON dela"`.
 
@@ -158,13 +163,14 @@ Hiter test v igri (konzola, tipka `~`): `/cb_state`. RCON lahko preveriš z ukaz
 
 `server/smoke_test.py` preveri celoten tok na headless strežniku brez igralca: hoja, rudarjenje, izdelovanje, gradnja.
 Pri tem uporabi ukaz `/cb_debug_spawn`, ki ustvari testni lik in deluje samo, ko ni povezan noben igralec.
-Strežnik mora teči z `auto_pause: false`, sicer brez igralcev stoji.
+Strežnik mora teči z `auto_pause: false`, sicer brez igralcev stoji. `start-server.sh` privzeto nastavi `auto_pause: true` (igra se ustavi, ko ni igralcev), zato za test to vrednost začasno spremeni v skripti.
 
 ## Igranje z drugimi
 
 - **LAN:** soigralec se poveže na `<IP tvojega računalnika>:34198` (na macOS: `ipconfig getifaddr en0`).
 - **Internet:** preusmeritev UDP 34198 na routerju ali Tailscale. Steam povabila ne delujejo, ker headless strežnik ne uporablja Steamovega povezovanja.
 - Strežnik teče samo, dokler je terminal odprt.
+- Igra teče v realnem času (~60 tickov/s), kot pri človeku. Z `auto_pause` se ustavi, ko ni povezanega odjemalca.
 
 ## Spoznanja
 
@@ -184,5 +190,5 @@ Strežnik mora teči z `auto_pause: false`, sicer brez igralcev stoji.
 ## Odprto
 
 - [ ] Izbira igralca, ki ga Claude upravlja (`FACTORIO_PLAYER`), ali Claudov lastni lik. Zdaj prevzame prvega povezanega igralca.
-- [ ] Geslo za igro in RCON samo na `127.0.0.1` (`--rcon-bind`) pred skupno igro. Zdaj strežnik nima gesla, RCON pa posluša na vseh vmesnikih.
+- [ ] Geslo za vstop v igro pred skupno igro. RCON je zaščiten z geslom iz `.mcp.json` in vezan samo na `127.0.0.1` (`--rcon-bind`), vstop v igro pa je brez gesla.
 - [ ] Animacija rudarjenja.

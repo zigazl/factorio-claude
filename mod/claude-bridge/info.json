@@ -4,6 +4,6 @@
   "title": "Claude Bridge",
   "author": "ziga",
   "description": "Exposes RCON commands (cb_*) so Claude can read the game state and control the player character fairly.",
-  "factorio_version": "2.0",
+  "factorio_version": "2.1",
   "dependencies": ["base >= 2.0"]
 }
